@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Underutilized Properties (2007)- Lexington, KY</title>
+</head>
+<body>
+  <style>
+    body {
+    }
+    .container {
+      width: 100%;
+    }
+
+    #map {
+      height: 950px;
+    }
+    .legend-color{
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin-top: 15px;
+      margin-left: 15px;
+    }
+    .legend-label{
+      display: inline;
+      padding-left: 15px;
+      position: relative;
+      top: -3px;
+    }
+    .legend-color{
+      display: inline-block
+    }
+    .last{
+      margin-bottom: 11px;
+    }
+    .popup-header{
+      font-weight: 700;
+    }
+  </style>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-9" id='map'></div>
+      <div class="col-md-3">
+        <div class="row">
+          <div class="col-md-12">
+            <h2>Lexington Underutilized Properties <small>(2007)</small></h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <p>
+              In 2007 the Lexington Division of Planning conducted a survey of underutilized property in Lexington.
+              The criteria for designating a propert as underutilized can be found <a href="http://previous.lexingtonky.gov/index.aspx@page=1826.html">here</a>.
+              It was essentially based on the amount of tax revenue the property supplied versus it's potential tax revenue.
+            </p>
+            <p>
+              Click on a parcel to see it's address, lot type, and a link to the Fayette County PVA entry for the property.
+            </p>
+            <p>
+              As we have since gone through a recession and then some, much of the data is out of date. Some parcels also do not have addresses given or PVA numbers.
+            </p>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <div class="panel-title">Legend</div>
+              </div>
+              <div class="legend-entry"><span class="legend-color" style="background-color: #FFEC99"></span><span class="legend-label">Not Underutilized</span></div>
+              <div class="legend-entry"><span class="legend-color" style="background-color: #FAB947"></span><span class="legend-label">Potentially Underutilized</span></div>
+              <div class="legend-entry last"><span class="legend-color" style="background-color: #E04242"></span><span class="legend-label">Underutilized</span></div>
+            </div>
+            <p>
+              <small>
+                Built using Mapbox Studio and Mapbox GL JS.
+              </small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src='https://api.mapbox.com/mapbox-gl-js/v0.27.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v0.27.0/mapbox-gl.css' rel='stylesheet' />
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYmxha2VzaGFsbCIsImEiOiJRSkN3Y3prIn0.MfDnpigJE6CVbEsV0xwLfA';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/blakeshall/civie4jzw002m2immshzdgbvj',
+        center: [-84.49395253211274, 38.04507242731742],
+        zoom: 13
+    });
+
+    map.on('click', function (e) {
+      var features = map.queryRenderedFeatures(e.point, { layers: ['underutilizedproperty-mid', 'underutilizedproperty-low', 'underutilizedproperty-high'] });
+
+      if (!features.length) {
+        return;
+      }
+
+      var feature = features[0];
+
+      var propertyType;
+      switch (feature.properties.UPS_SITECH) {
+        case "LS":
+          propertyType = "Lot with Structures";
+          break;
+        case "VA":
+          propertyType = "Vacant Lot";
+          break;
+        case "PL":
+          propertyType = "Parking Lot";
+          break;
+        default:
+          propertyType = '';
+      }
+      var pvaLink;
+      if (feature.properties.PVANUM == '') {
+        pvaLink = "";
+      } else {
+        pvaLink = '<a class="pva-link" href="http://qpublic9.qpublic.net/ky_fayette_display.php?KEY=' + feature.properties.PVANUM + '">PVA Entry</a>';
+      }
+
+      var html = '<span class="popup-header">' + feature.properties.GIS_ADDRES + '</span></br><span class="property-type">Property Type: '+ propertyType +'</span></br>' + pvaLink;
+      var popup = new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(html)
+          .addTo(map);
+    });
+  </script>
+</body>
+</html>
