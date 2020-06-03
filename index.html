@@ -86,13 +86,13 @@
   </div>
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <script src='https://api.mapbox.com/mapbox-gl-js/v0.27.0/mapbox-gl.js'></script>
-  <link href='https://api.mapbox.com/mapbox-gl-js/v0.27.0/mapbox-gl.css' rel='stylesheet' />
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css' rel='stylesheet' />
   <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiYmxha2VzaGFsbCIsImEiOiJRSkN3Y3prIn0.MfDnpigJE6CVbEsV0xwLfA';
     var map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/blakeshall/civie4jzw002m2immshzdgbvj',
+        style: 'mapbox://styles/blakeshall/ckaziort22llv1ipl0qa3h2ix',
         center: [-84.49395253211274, 38.04507242731742],
         zoom: 13
     });
@@ -120,14 +120,7 @@
         default:
           propertyType = '';
       }
-      var pvaLink;
-      if (feature.properties.PVANUM == '') {
-        pvaLink = "";
-      } else {
-        pvaLink = '<a class="pva-link" href="http://qpublic9.qpublic.net/ky_fayette_display.php?KEY=' + feature.properties.PVANUM + '">PVA Entry</a>';
-      }
-
-      var html = '<span class="popup-header">' + feature.properties.GIS_ADDRES + '</span></br><span class="property-type">Property Type: '+ propertyType +'</span></br>' + pvaLink;
+      var html = '<span class="popup-header">' + feature.properties.GIS_ADDRES + '</span></br><span class="property-type">Property Type: '+ propertyType +'</span></br>';
       var popup = new mapboxgl.Popup()
           .setLngLat(e.lngLat)
           .setHTML(html)
